@@ -23,6 +23,11 @@
       --accent: #C8553D;
       --surface: #EFEAE0;
       --hairline: rgba(26, 26, 26, 0.10);
+
+      --reveal-distance: 40px;
+      --reveal-duration: 820ms;
+      --reveal-ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --reveal-scale-from: 1.06;
     }
 
     * { box-sizing: border-box; }
@@ -101,7 +106,7 @@
 
     .hero .mesh-layer {
       position: absolute;
-      inset: 0;
+      inset: 0 0 -50% 0;
       z-index: 0;
       pointer-events: none;
       background-repeat: no-repeat;
@@ -157,6 +162,8 @@
       margin: 0 0 1.25rem;
       letter-spacing: -0.022em;
       word-spacing: 0.04em;
+      opacity: 0;
+      transform: translateY(20px);
     }
     .hero-name .given,
     .hero-name .accent { display: inline; }
@@ -173,6 +180,8 @@
       margin: 0 auto;
       color: var(--ink);
       font-weight: 400;
+      opacity: 0;
+      transform: translateY(20px);
     }
     .hero-tagline .accent { font-style: italic; color: var(--accent); }
     .hero-tagline .vabene-link {
@@ -191,15 +200,30 @@
       position: absolute;
       bottom: 2.5rem;
       left: 50%;
-      transform: translateX(-50%);
+      transform: translate(-50%, 20px);
       z-index: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 0.4rem;
       color: var(--ink);
-      opacity: 0.7;
+      opacity: 0;
       transition: opacity 200ms ease-out;
+    }
+    body.loaded .hero-name {
+      animation: heroEnter 900ms var(--reveal-ease) 200ms forwards;
+    }
+    body.loaded .hero-tagline {
+      animation: heroEnter 900ms var(--reveal-ease) 480ms forwards;
+    }
+    body.loaded .scroll-cue {
+      animation: scrollCueEnter 900ms var(--reveal-ease) 880ms forwards;
+    }
+    @keyframes heroEnter {
+      to { opacity: 1; transform: none; }
+    }
+    @keyframes scrollCueEnter {
+      to { opacity: 0.7; transform: translateX(-50%); }
     }
     .scroll-cue .label {
       font-family: "JetBrains Mono", ui-monospace, monospace;
@@ -435,15 +459,40 @@
 
     [data-reveal] {
       opacity: 0;
-      transform: translateY(12px);
-      transition: opacity 380ms ease-out, transform 380ms ease-out;
+      transform: translateY(var(--reveal-distance));
+      transition:
+        opacity var(--reveal-duration) var(--reveal-ease),
+        transform var(--reveal-duration) var(--reveal-ease);
+      transition-delay: var(--reveal-delay, 0ms);
     }
     [data-reveal].is-revealed {
       opacity: 1;
       transform: none;
     }
+
+    [data-reveal-image] img {
+      transform: scale(var(--reveal-scale-from));
+      transform-origin: center;
+      transition: transform var(--reveal-duration) var(--reveal-ease);
+      transition-delay: var(--reveal-delay, 0ms);
+    }
+    [data-reveal-image].is-revealed img {
+      transform: scale(1);
+    }
+
     @media (prefers-reduced-motion: reduce) {
-      [data-reveal] { opacity: 1; transform: none; transition: none; }
+      [data-reveal],
+      [data-reveal].is-revealed,
+      [data-reveal-image] img,
+      .hero-name,
+      .hero-tagline,
+      .scroll-cue {
+        opacity: 1;
+        transform: none;
+        transition: none;
+        animation: none;
+      }
+      .scroll-cue { opacity: 0.7; transform: translateX(-50%); }
     }
 
     /* --------------------------- FOCUS ----------------------------- */
@@ -481,30 +530,30 @@
       </div>
     </section>
 
-    <section id="vabene" class="wide" data-reveal>
-      <div class="vabene-head">
-        <p class="eyebrow">Currently building</p>
-        <h2 class="display vabene-title"><span class="accent">VaBene</span></h2>
-        <p class="vabene-sub">A group event planning marketplace. Solo-built across .NET, React, React Native, and Stripe Connect.</p>
-        <div class="prose" style="max-width: 640px;">
+    <section id="vabene" class="wide">
+      <div class="vabene-head" data-reveal-group>
+        <p class="eyebrow" data-reveal>Currently building</p>
+        <h2 class="display vabene-title" data-reveal><span class="accent">VaBene</span></h2>
+        <p class="vabene-sub" data-reveal>A group event planning marketplace. Solo-built across .NET, React, React Native, and Stripe Connect.</p>
+        <div class="prose" style="max-width: 640px;" data-reveal>
           <p>VaBene helps groups plan trips and events together &mdash; itinerary collaboration, native payment splitting through Stripe Connect, and a marketplace of services and experiences. I built the entire stack: ASP.NET Core 8 backend, PostgreSQL on Neon, React web, React Native + Expo mobile, 58+ Stripe Connect endpoints, real-time chat via SignalR, background jobs through Hangfire.</p>
         </div>
       </div>
 
-      <div class="screenshots">
-        <figure class="screenshot">
+      <div class="screenshots" data-reveal-group>
+        <figure class="screenshot" data-reveal data-reveal-image>
           <img src="images/screen-home.webp" alt="VaBene home screen showing upcoming events." loading="lazy" width="1000" height="2021">
           <figcaption>Upcoming events</figcaption>
         </figure>
-        <figure class="screenshot">
+        <figure class="screenshot" data-reveal data-reveal-image>
           <img src="images/screen-itinerary.webp" alt="VaBene Scottsdale Girls Trip itinerary, day-by-day with hike and spa activities." loading="lazy" width="1000" height="2021">
           <figcaption>Day-by-day planning</figcaption>
         </figure>
-        <figure class="screenshot">
+        <figure class="screenshot" data-reveal data-reveal-image>
           <img src="images/screen-expenses.webp" alt="VaBene Napa Wine Weekend expenses with chip-in cost breakdown." loading="lazy" width="1000" height="2021">
           <figcaption>Stripe Connect payment splitting</figcaption>
         </figure>
-        <figure class="screenshot">
+        <figure class="screenshot" data-reveal data-reveal-image>
           <img src="images/screen-chat.webp" alt="VaBene group chat with a poll for booking a private chef." loading="lazy" width="1000" height="2021">
           <figcaption>Decide as a group</figcaption>
         </figure>
@@ -515,7 +564,7 @@
       <p class="eyebrow" data-reveal>Projects</p>
 
       <div class="projects-list">
-        <article class="project project--beastchain" data-reveal>
+        <article class="project project--beastchain" data-reveal data-reveal-image>
           <div class="media">
             <img src="images/proj-beastchain.gif" alt="Animated terminal demo of the BeastChain blockchain mining a block." loading="lazy" width="1200" height="720">
           </div>
@@ -530,7 +579,7 @@
           </div>
         </article>
 
-        <article class="project project--election" data-reveal>
+        <article class="project project--election" data-reveal data-reveal-image>
           <div class="media">
             <img src="images/proj-election.webp" alt="Streamlit dashboard scoring U.S. House donor impact across candidates." loading="lazy" width="2800" height="2200">
           </div>
@@ -548,7 +597,7 @@
           </div>
         </article>
 
-        <article class="project project--agents" data-reveal>
+        <article class="project project--agents" data-reveal data-reveal-image>
           <div class="media">
             <img src="images/proj-agents.webp" alt="Telegram lead-card showing a qualifying Reddit post surfaced by the vabene-agents fleet." loading="lazy" width="369" height="800">
           </div>
@@ -567,29 +616,29 @@
 
     <section id="experience">
       <p class="eyebrow" data-reveal>Experience</p>
-      <ol class="experience-list" data-reveal>
-        <li class="experience-item">
+      <ol class="experience-list" data-reveal-group>
+        <li class="experience-item" data-reveal>
           <span class="date">Oct 2025&ndash;Present</span>
           <p class="role">
             <strong>Founder &amp; Full-Stack Engineer</strong>, VaBene
             <span class="achievement">Built three-platform product solo; 58+ Stripe Connect endpoints for multi-merchant payment splitting.</span>
           </p>
         </li>
-        <li class="experience-item">
+        <li class="experience-item" data-reveal>
           <span class="date">Nov 2024&ndash;May 2025</span>
           <p class="role">
             <strong>Software Engineer (Contract)</strong>, Geonexus
             <span class="achievement">Cut UI test execution time 80% with a Jenkins automation framework.</span>
           </p>
         </li>
-        <li class="experience-item">
+        <li class="experience-item" data-reveal>
           <span class="date">Summer 2023</span>
           <p class="role">
             <strong>Software Engineering Intern</strong>, Nutanix
             <span class="achievement">Built a Spring Boot microservice auto-creating tickets for CI/CD failures across 700+ daily builds.</span>
           </p>
         </li>
-        <li class="experience-item">
+        <li class="experience-item" data-reveal>
           <span class="date">May 2024</span>
           <p class="role">
             <strong>B.S. Computer Science &amp; Data Science</strong>, University of Wisconsin&ndash;Madison
@@ -614,6 +663,18 @@
 
   <script>
     (function () {
+      const STAGGER_MS = 110;
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // 1. Per-item stagger: assign --reveal-delay to direct children of any [data-reveal-group]
+      document.querySelectorAll('[data-reveal-group]').forEach(function (group) {
+        const items = group.querySelectorAll(':scope > [data-reveal]');
+        items.forEach(function (el, i) {
+          el.style.setProperty('--reveal-delay', (i * STAGGER_MS) + 'ms');
+        });
+      });
+
+      // 2. IntersectionObserver: one-shot reveal as each [data-reveal] enters viewport
       const io = new IntersectionObserver(function (entries) {
         for (const e of entries) {
           if (e.isIntersecting) {
@@ -622,20 +683,50 @@
           }
         }
       }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
-
       document.querySelectorAll('[data-reveal]').forEach(function (el) { io.observe(el); });
 
+      // 3. Hero load orchestration: wait for fonts (capped at 1500ms), then add body.loaded
+      function finishLoad() { document.body.classList.add('loaded'); }
+      if (document.fonts && document.fonts.ready) {
+        Promise.race([
+          document.fonts.ready,
+          new Promise(function (r) { setTimeout(r, 1500); })
+        ]).then(finishLoad);
+      } else {
+        finishLoad();
+      }
+
+      // 4. Hero parallax on the mesh layer (skipped if user prefers reduced motion)
+      const mesh = document.querySelector('.hero .mesh-layer');
+      const hero = document.querySelector('.hero');
+      let parallaxTicking = false;
+      function updateParallax() {
+        const heroHeight = hero.offsetHeight;
+        const y = Math.min(window.scrollY, heroHeight);
+        mesh.style.transform = 'scale(1.05) translate3d(0, ' + (-y * 0.32) + 'px, 0)';
+        parallaxTicking = false;
+      }
+      if (!reduceMotion && mesh && hero) {
+        window.addEventListener('scroll', function () {
+          if (!parallaxTicking) {
+            window.requestAnimationFrame(updateParallax);
+            parallaxTicking = true;
+          }
+        }, { passive: true });
+      }
+
+      // 5. Scroll-cue fade — preserves the 0.7 baseline opacity, fades to 0 over the first ~220px
       const cue = document.getElementById('scroll-cue');
-      let ticking = false;
+      let cueTicking = false;
       function updateCue() {
-        const o = Math.max(0, 1 - window.scrollY / 220);
+        const o = Math.max(0, 0.7 * (1 - window.scrollY / 220));
         cue.style.opacity = o.toFixed(3);
-        ticking = false;
+        cueTicking = false;
       }
       window.addEventListener('scroll', function () {
-        if (!ticking) {
+        if (!cueTicking) {
           window.requestAnimationFrame(updateCue);
-          ticking = true;
+          cueTicking = true;
         }
       }, { passive: true });
     })();
