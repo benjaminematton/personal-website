@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Benjamin Matton</title>
+  <meta name="description" content="Benjamin Matton — software engineer in San Francisco, solo founder building VaBene.">
+  <meta name="theme-color" content="#fef0ec">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23F5F1E8'/%3E%3Ctext x='50' y='70' font-size='70' text-anchor='middle' font-family='Georgia,serif' font-style='italic' fill='%23C8553D'%3EM%3C/text%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Fraunces:opsz,wght,SOFT,ital@9..144,300..600,0..100,0;9..144,300..600,0..100,1&family=JetBrains+Mono:wght@400;500&display=swap">
+
+  <style>
+    :root {
+      --mesh-drift-duration: 11s;
+      --cream: #F5F1E8;
+      --hero-base: #fef0ec;
+      --ink: #1a1a1a;
+      --ink-soft: rgba(26, 26, 26, 0.62);
+      --ink-faint: rgba(26, 26, 26, 0.42);
+      --accent: #C8553D;
+      --surface: #EFEAE0;
+      --hairline: rgba(26, 26, 26, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+    body {
+      margin: 0;
+      background: var(--cream);
+      color: var(--ink);
+      font-family: "DM Sans", system-ui, -apple-system, sans-serif;
+      font-size: 1.0625rem;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    p { margin: 0 0 1.25em; }
+
+    .prose .accent { font-style: italic; color: var(--accent); }
+
+    img { display: block; max-width: 100%; height: auto; }
+
+    .display {
+      font-family: "Fraunces", Georgia, "Times New Roman", serif;
+      font-variation-settings: "opsz" 144, "SOFT" 100;
+      font-weight: 400;
+      font-style: normal;
+      letter-spacing: -0.015em;
+      line-height: 1.05;
+      margin: 0;
+    }
+    .display .accent { font-style: italic; color: var(--accent); }
+
+    .eyebrow {
+      font-family: "Fraunces", Georgia, serif;
+      font-variation-settings: "opsz" 24, "SOFT" 100;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 0.9375rem;
+      color: var(--accent);
+      margin: 0 0 1.25rem;
+      letter-spacing: 0.01em;
+    }
+
+    .mono {
+      font-family: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+      font-feature-settings: "tnum" 1;
+    }
+
+    section {
+      padding: clamp(4.5rem, 9vw, 7.5rem) 1.5rem;
+      max-width: 880px;
+      margin: 0 auto;
+    }
+    section.wide { max-width: 1160px; }
+
+    .prose { max-width: 660px; margin: 0 auto; }
+
+    /* ----------------------------- HERO ----------------------------- */
+
+    .hero {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      min-height: 100vh;
+      min-height: 100svh;
+      background-color: var(--hero-base);
+      display: grid;
+      place-items: center;
+    }
+
+    .hero .mesh-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-repeat: no-repeat;
+      background-size: 140% 140%;
+      background-position: 0% 0%;
+      filter: blur(18px) saturate(115%);
+      transform: scale(1.05);
+      background-image:
+        radial-gradient(44vmax 44vmax at 25% 35%, rgba(248,113,113,0.52) 0%, rgba(0,0,0,0) 60%),
+        radial-gradient(41vmax 41vmax at 70% 55%, rgba(251,146,60,0.48) 0%, rgba(0,0,0,0) 60%),
+        radial-gradient(38vmax 38vmax at 40% 75%, rgba(251,191,36,0.44) 0%, rgba(0,0,0,0) 60%),
+        radial-gradient(34vmax 34vmax at 80% 25%, rgba(220,38,38,0.36) 0%, rgba(0,0,0,0) 60%);
+      animation: meshDrift var(--mesh-drift-duration) linear infinite;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero .mesh-layer { animation: none; }
+    }
+
+    @media (max-width: 640px) {
+      .hero .mesh-layer { filter: blur(12px) saturate(115%); }
+    }
+
+    .hero .mesh-layer::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.10;
+      mix-blend-mode: overlay;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.4'/%3E%3C/svg%3E");
+      background-size: 160px 160px;
+    }
+
+    @keyframes meshDrift {
+      0%   { background-position: 0% 0%; }
+      50%  { background-position: 100% 60%; }
+      100% { background-position: 0% 0%; }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 0 1.5rem;
+      max-width: 1000px;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .hero-name {
+      font-size: clamp(2.75rem, 10vw, 7rem);
+      margin: 0 0 1.25rem;
+      letter-spacing: -0.022em;
+      word-spacing: 0.04em;
+    }
+    .hero-name .given,
+    .hero-name .accent { display: inline; }
+
+    @media (max-width: 520px) {
+      .hero-name .given,
+      .hero-name .accent { display: block; line-height: 1.0; }
+      .hero-name .accent { margin-top: 0.15em; }
+    }
+
+    .hero-tagline {
+      font-size: clamp(1rem, 1.4vw, 1.125rem);
+      max-width: 38rem;
+      margin: 0 auto;
+      color: var(--ink);
+      font-weight: 400;
+    }
+    .hero-tagline .accent { font-style: italic; color: var(--accent); }
+
+    .scroll-cue {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--ink);
+      opacity: 0.7;
+      transition: opacity 200ms ease-out;
+    }
+    .scroll-cue .label {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.625rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .scroll-cue .arrow { font-size: 1rem; line-height: 1; }
+
+    /* ----------------------------- ABOUT ----------------------------- */
+
+    .about { text-align: center; }
+    .about .headshot {
+      width: 100%;
+      max-width: 280px;
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+      border-radius: 8px;
+      margin: 0 auto 2.5rem;
+      box-shadow: 0 8px 28px -16px rgba(26, 26, 26, 0.30);
+    }
+    .about p { text-align: left; }
+
+    /* --------------------------- VABENE ----------------------------- */
+
+    .vabene-head { margin-bottom: 3.5rem; max-width: 660px; }
+    .vabene-title {
+      font-size: clamp(2.75rem, 6vw, 4.5rem);
+      margin: 0 0 0.75rem;
+    }
+    .vabene-title .accent { font-style: italic; color: var(--accent); }
+    .vabene-sub {
+      font-size: 1.0625rem;
+      color: var(--ink-soft);
+      margin: 0 0 1.75rem;
+    }
+
+    .screenshots {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.75rem 1.75rem;
+      margin-top: 4rem;
+    }
+    @media (max-width: 720px) {
+      .screenshots { grid-template-columns: 1fr; gap: 2.5rem; }
+    }
+    .screenshot figure { margin: 0; }
+    .screenshot img {
+      width: 100%;
+      border-radius: 14px;
+      box-shadow: 0 28px 70px -28px rgba(26, 26, 26, 0.28);
+      background: var(--surface);
+    }
+    .screenshot figcaption {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.6875rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    /* --------------------------- PROJECTS --------------------------- */
+
+    .projects-list { display: flex; flex-direction: column; gap: clamp(4rem, 8vw, 6rem); margin-top: 3rem; }
+
+    .project {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: clamp(2rem, 5vw, 4rem);
+      align-items: center;
+    }
+    @media (max-width: 820px) {
+      .project { grid-template-columns: 1fr; gap: 2rem; }
+    }
+
+    .project .media {
+      aspect-ratio: 4 / 3;
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--surface);
+      box-shadow: 0 24px 60px -28px rgba(26, 26, 26, 0.25);
+    }
+    .project .media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    .project--agents .media img { object-position: 50% 75%; }
+
+    .project h3 {
+      font-family: "Fraunces", Georgia, serif;
+      font-variation-settings: "opsz" 60, "SOFT" 100;
+      font-weight: 400;
+      font-size: clamp(1.625rem, 2.4vw, 2.125rem);
+      letter-spacing: -0.005em;
+      margin: 0 0 0.5rem;
+      line-height: 1.15;
+    }
+    .project .tagline {
+      font-style: italic;
+      font-size: 1.0625rem;
+      color: var(--ink-soft);
+      margin: 0 0 1.25rem;
+    }
+    .project .description {
+      font-size: 1rem;
+      line-height: 1.7;
+      margin: 0 0 1.5rem;
+    }
+    .project .tags {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 1.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0 0.5rem;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.6875rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+    .project .tags li:not(:last-child)::after {
+      content: " · ";
+      margin-left: 0.5rem;
+      color: var(--ink-faint);
+    }
+    .project .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      font-size: 0.9375rem;
+    }
+    .project .links a { display: inline-block; }
+    .project .links a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+    /* --------------------------- EXPERIENCE ------------------------- */
+
+    .experience-list {
+      list-style: none;
+      padding: 0;
+      margin: 3rem 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+    .experience-item {
+      display: grid;
+      grid-template-columns: 9rem 1fr;
+      gap: 2rem;
+      align-items: baseline;
+    }
+    @media (max-width: 640px) {
+      .experience-item { grid-template-columns: 1fr; gap: 0.5rem; }
+    }
+    .experience-item .date {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-feature-settings: "tnum" 1;
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      padding-top: 0.25rem;
+    }
+    .experience-item .role {
+      font-size: 1.0625rem;
+      line-height: 1.55;
+    }
+    .experience-item .role strong {
+      font-weight: 500;
+      color: var(--ink);
+    }
+    .experience-item .role .achievement {
+      display: block;
+      color: var(--ink-soft);
+      margin-top: 0.25rem;
+    }
+
+    /* ----------------------------- CONTACT -------------------------- */
+
+    .contact { text-align: center; padding-top: clamp(6rem, 12vw, 9rem); padding-bottom: 4rem; }
+    .contact-eyebrow { color: var(--accent); }
+
+    .email-link {
+      display: inline-block;
+      font-family: "Fraunces", Georgia, serif;
+      font-variation-settings: "opsz" 144, "SOFT" 100;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(1.75rem, 5.5vw, 3rem);
+      color: var(--accent);
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+      background-image: linear-gradient(currentColor, currentColor);
+      background-size: 100% 1px;
+      background-repeat: no-repeat;
+      background-position: 0 calc(100% - 0.05em);
+      transition: background-size 380ms cubic-bezier(0.2, 0.7, 0.2, 1);
+      margin: 0.75rem 0 2.5rem;
+      overflow-wrap: anywhere;
+    }
+    .email-link:hover, .email-link:focus-visible {
+      background-size: 100% 2px;
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      align-items: center;
+      font-size: 0.9375rem;
+      color: var(--ink-soft);
+    }
+    .social-links a { color: var(--ink); }
+    .social-links a:hover { color: var(--accent); }
+    .social-links .sep {
+      display: inline-block;
+      margin: 0 0.85rem;
+      color: var(--ink-faint);
+    }
+
+    footer.site-footer {
+      text-align: center;
+      padding: 4rem 1.5rem 3rem;
+      font-size: 0.8125rem;
+      color: #6a655e;
+    }
+
+    /* --------------------------- REVEAL ---------------------------- */
+
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 380ms ease-out, transform 380ms ease-out;
+    }
+    [data-reveal].is-revealed {
+      opacity: 1;
+      transform: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      [data-reveal] { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* --------------------------- FOCUS ----------------------------- */
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    ::selection { background: rgba(200, 85, 61, 0.18); color: var(--ink); }
+  </style>
+</head>
+<body>
+
+  <header class="hero" role="banner">
+    <div class="mesh-layer" aria-hidden="true"></div>
+    <div class="hero-content">
+      <h1 class="display hero-name"><span class="given">Benjamin</span> <span class="accent">Matton</span></h1>
+      <p class="hero-tagline">Software engineer in San Francisco. Solo founder building <span class="accent">VaBene</span>.</p>
+    </div>
+    <div class="scroll-cue" id="scroll-cue" aria-hidden="true">
+      <span class="label">Scroll</span>
+      <span class="arrow">&darr;</span>
+    </div>
+  </header>
+
+  <main>
+
+    <section id="about" class="about" data-reveal>
+      <img class="headshot" src="images/ben-headshot.jpg" alt="Benjamin Matton at the Palace of Fine Arts in San Francisco." width="280" height="373">
+      <div class="prose">
+        <p>I'm a software engineer living in San Francisco. I graduated from Wisconsin in 2024 and have spent the last year building <span class="accent">VaBene</span> &mdash; a group event planning marketplace &mdash; as the sole engineer on backend, web, and mobile. Before that, I shipped CI infrastructure at Nutanix and automated GUI testing at Geonexus. I like systems that are hard to get right: payment splitting, booking concurrency, multi-agent LLM workflows.</p>
+      </div>
+    </section>
+
+    <section id="vabene" class="wide" data-reveal>
+      <div class="vabene-head">
+        <p class="eyebrow">Currently building</p>
+        <h2 class="display vabene-title"><span class="accent">VaBene</span></h2>
+        <p class="vabene-sub">A group event planning marketplace. Solo-built across .NET, React, React Native, and Stripe Connect.</p>
+        <div class="prose" style="max-width: 640px;">
+          <p>VaBene helps groups plan trips and events together &mdash; itinerary collaboration, native payment splitting through Stripe Connect, and a marketplace of services and experiences. I built the entire stack: ASP.NET Core 8 backend, PostgreSQL on Neon, React web, React Native + Expo mobile, 58+ Stripe Connect endpoints, real-time chat via SignalR, background jobs through Hangfire.</p>
+        </div>
+      </div>
+
+      <div class="screenshots">
+        <figure class="screenshot">
+          <img src="images/screen-home.webp" alt="VaBene home screen showing upcoming events." loading="lazy" width="1000" height="2021">
+          <figcaption>Upcoming events</figcaption>
+        </figure>
+        <figure class="screenshot">
+          <img src="images/screen-itinerary.webp" alt="VaBene Scottsdale Girls Trip itinerary, day-by-day with hike and spa activities." loading="lazy" width="1000" height="2021">
+          <figcaption>Day-by-day planning</figcaption>
+        </figure>
+        <figure class="screenshot">
+          <img src="images/screen-expenses.webp" alt="VaBene Napa Wine Weekend expenses with chip-in cost breakdown." loading="lazy" width="1000" height="2021">
+          <figcaption>Stripe Connect payment splitting</figcaption>
+        </figure>
+        <figure class="screenshot">
+          <img src="images/screen-chat.webp" alt="VaBene group chat with a poll for booking a private chef." loading="lazy" width="1000" height="2021">
+          <figcaption>Decide as a group</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="projects" class="wide">
+      <p class="eyebrow" data-reveal>Projects</p>
+
+      <div class="projects-list">
+        <article class="project project--beastchain" data-reveal>
+          <div class="media">
+            <img src="images/proj-beastchain.gif" alt="Animated terminal demo of the BeastChain blockchain mining a block." loading="lazy" width="1200" height="720">
+          </div>
+          <div class="content">
+            <h3>BeastChain</h3>
+            <p class="tagline">A 3-node blockchain in Java, small enough to read in an afternoon.</p>
+            <p class="description">ECDSA-signed UTXO transactions, proof-of-work mining at difficulty 4, gRPC peer gossip with broadcast-storm prevention. Refactored from a singleton-soup tutorial into a Node composition root &mdash; dropped integration test time from 5.6s to 140ms and surfaced a real bug where peer nodes weren't replaying UTXOs on accepted broadcast blocks.</p>
+            <ul class="tags" aria-label="Tech stack">
+              <li>Java 21</li><li>gRPC</li><li>BouncyCastle</li><li>Docker</li>
+            </ul>
+            <p class="links"><a href="https://github.com/benjaminematton/beastChain" rel="noopener">github.com/benjaminematton/beastChain &rarr;</a></p>
+          </div>
+        </article>
+
+        <article class="project project--election" data-reveal>
+          <div class="media">
+            <img src="images/proj-election.webp" alt="Streamlit dashboard scoring U.S. House donor impact across candidates." loading="lazy" width="2800" height="2200">
+          </div>
+          <div class="content">
+            <h3>oath_score &mdash; House Donor Impact Score</h3>
+            <p class="tagline">An ML model scoring U.S. House candidates 1&ndash;10 on donation impact.</p>
+            <p class="description">Multi-quantile regression predicting race competitiveness on snapshot-date-disciplined inputs. Backtested on 2024: matches Cook Political Report's close-race accuracy using inputs available 53 days before Cook's final ratings (paired bootstrap &Delta; at T-60: &minus;0.002, 95% CI [&minus;0.34, +0.30]). 217 tests, end-to-end leakage integration test, Wayback Machine ingestion of contemporaneous Cook ratings to validate against back-fill.</p>
+            <ul class="tags" aria-label="Tech stack">
+              <li>Python</li><li>scikit-learn</li><li>Streamlit</li><li>FEC API</li>
+            </ul>
+            <p class="links">
+              <a href="https://github.com/benjaminematton/election_predictions" rel="noopener">github.com/benjaminematton/election_predictions &rarr;</a>
+              <a href="https://electionpredictions-house-impact-score.streamlit.app" rel="noopener">live demo &rarr;</a>
+            </p>
+          </div>
+        </article>
+
+        <article class="project project--agents" data-reveal>
+          <div class="media">
+            <img src="images/proj-agents.webp" alt="Telegram lead-card showing a qualifying Reddit post surfaced by the vabene-agents fleet." loading="lazy" width="369" height="800">
+          </div>
+          <div class="content">
+            <h3>vabene-agents</h3>
+            <p class="tagline">A small fleet of LLM agents scouting Reddit for VaBene's customer development.</p>
+            <p class="description">Four openclaw skills running on a 24/7 Mac mini, scanning city subs every two hours and surfacing qualifying posts to Telegram for human review &mdash; nothing posts to Reddit automatically. Two-machine deployment discipline (dev laptop is the only commit-producer, host is a pure consumer). Killed the supply-side merchant-scout skill before shipping after discovering the data wasn't where the agent looked.</p>
+            <ul class="tags" aria-label="Tech stack">
+              <li>Claude API</li><li>openclaw</li><li>macOS launchd</li>
+            </ul>
+            <p class="links"><a href="https://github.com/benjaminematton/vabene-agents" rel="noopener">github.com/benjaminematton/vabene-agents &rarr;</a></p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="experience">
+      <p class="eyebrow" data-reveal>Experience</p>
+      <ol class="experience-list" data-reveal>
+        <li class="experience-item">
+          <span class="date">Oct 2025&ndash;Present</span>
+          <p class="role">
+            <strong>Founder &amp; Full-Stack Engineer</strong>, VaBene
+            <span class="achievement">Built three-platform product solo; 58+ Stripe Connect endpoints for multi-merchant payment splitting.</span>
+          </p>
+        </li>
+        <li class="experience-item">
+          <span class="date">Nov 2024&ndash;May 2025</span>
+          <p class="role">
+            <strong>Software Engineer (Contract)</strong>, Geonexus
+            <span class="achievement">Cut UI test execution time 80% with a Jenkins automation framework.</span>
+          </p>
+        </li>
+        <li class="experience-item">
+          <span class="date">Summer 2023</span>
+          <p class="role">
+            <strong>Software Engineering Intern</strong>, Nutanix
+            <span class="achievement">Built a Spring Boot microservice auto-creating tickets for CI/CD failures across 700+ daily builds.</span>
+          </p>
+        </li>
+        <li class="experience-item">
+          <span class="date">May 2024</span>
+          <p class="role">
+            <strong>B.S. Computer Science &amp; Data Science</strong>, University of Wisconsin&ndash;Madison
+          </p>
+        </li>
+      </ol>
+    </section>
+
+    <section id="contact" class="contact" data-reveal>
+      <p class="eyebrow contact-eyebrow">Get in touch</p>
+      <a class="email-link" href="mailto:benjaminematton@gmail.com">benjaminematton@gmail.com</a>
+      <p class="social-links">
+        <a href="https://github.com/benjaminematton" rel="noopener">GitHub</a>
+        <span class="sep" aria-hidden="true">&middot;</span>
+        <a href="https://www.linkedin.com/in/benmatton" rel="noopener">LinkedIn</a>
+      </p>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">&copy; 2026 Benjamin Matton</footer>
+
+  <script>
+    (function () {
+      const io = new IntersectionObserver(function (entries) {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add('is-revealed');
+            io.unobserve(e.target);
+          }
+        }
+      }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+
+      document.querySelectorAll('[data-reveal]').forEach(function (el) { io.observe(el); });
+
+      const cue = document.getElementById('scroll-cue');
+      let ticking = false;
+      function updateCue() {
+        const o = Math.max(0, 1 - window.scrollY / 220);
+        cue.style.opacity = o.toFixed(3);
+        ticking = false;
+      }
+      window.addEventListener('scroll', function () {
+        if (!ticking) {
+          window.requestAnimationFrame(updateCue);
+          ticking = true;
+        }
+      }, { passive: true });
+    })();
+  </script>
+</body>
+</html>
